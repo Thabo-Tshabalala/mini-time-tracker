@@ -1,0 +1,15 @@
+:root {
+  --color-text-light: rgba(255, 255, 255, 0.87);
+  --color-text-dark: #213547;
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #242424;
+  --color-primary: #1a73e8;
+  --color-primary-hover: #1765cc;
+  --color-success: #18bc18;
+  --color-error: #d93025;
+  --color-error-hover: #b3261e;
+  --color-border-light: #e0e0e0;
+  --color-border-dark: #444444;
+  --color-input-bg-light: #fafafa;
+  --color-input-bg-dark: #333333;
+}
