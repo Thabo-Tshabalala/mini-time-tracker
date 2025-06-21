@@ -1,0 +1,73 @@
+.time-entry-form {
+  max-width: 420px;
+  margin: 30px auto;
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.time-entry-form input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: var(--color-input-bg-light);
+}
+
+.time-entry-form input:focus {
+  border-color: var(--color-primary);
+  background: var(--color-bg-light);
+  outline: none;
+}
+
+.timer-display {
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid var(--color-border-light);
+}
+
+.timer-display.running {
+  color: var(--color-error);
+}
+
+.time-entry-form button {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+}
+
+.button-start,
+.button-submit {
+  background-color: var(--color-primary);
+}
+
+.button-start:hover {
+  background-color: var(--color-success);
+}
+
+.button-stop {
+  background-color: var(--color-error);
+}
+
+.button-stop:hover {
+  background-color: var(--color-error-hover);
+}
+
+.button-submit:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  margin-top: -8px;
+}
