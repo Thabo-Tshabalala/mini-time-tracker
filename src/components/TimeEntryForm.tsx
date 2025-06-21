@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { isValidTaskName } from "../utils/validateTimeEntry";
 import { useTimer } from "../hooks/useTimer";
+import "./TimeEntryForm.css";
 
 interface Props {
   onAdd: (entry: { taskName: string; hours: number }) => void;
@@ -9,9 +10,17 @@ interface Props {
 function TimeEntryForm({ onAdd }: Props) {
   const [taskName, setTaskName] = useState("");
   const [hours, setHours] = useState("");
- const [error, setError] = useState<string | null>(null);
- const [isRunning, setIsRunning] = useState(false);
- const { seconds, start, stop } = useTimer();
+  const [error, setError] = useState<string | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const { seconds, start, stop, getHours } = useTimer();
+
+  const formatTime = (s: number): string => {
+    const hrs = Math.floor(s / 3600);
+    const mins = Math.floor((s % 3600) / 60);
+    const secs = s % 60;
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+  };
 
   const toggleTimer = () => {
     if (isRunning) {
@@ -21,44 +30,36 @@ function TimeEntryForm({ onAdd }: Props) {
     }
     setIsRunning(!isRunning);
   };
-
-const formatTime = (s: number) => {
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = s % 60;
-  return `${h}h ${m}m ${sec}s`;
-};
-
   
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const parsed = parseFloat(hours);
+    const manualHours = parseFloat(hours.trim());
+    const timerHours = getHours();
+    const totalHours = !isNaN(manualHours) && manualHours > 0 ? manualHours : timerHours;
 
-  if (!isValidTaskName(taskName)) {
-    setError("Task name is required.");
-    return;
-  }
+    if (!isValidTaskName(taskName)) {
+      setError("Task name is required.");
+      return;
+    }
 
-  if (isNaN(parsed) || parsed <= 0) {
-    setError("Please enter valid hours.");
-    return;
-  }
+    if (totalHours <= 0) {
+      setError("Enter valid hours or use the timer.");
+      return;
+    }
 
-  onAdd({ taskName: taskName.trim(), hours: parsed });
-  setTaskName("");
-  setHours("");
-  setError(null);
-};
+    onAdd({ taskName: taskName.trim(), hours: totalHours });
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="time-entry-form" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Task name"
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
       />
+
       <input
         type="number"
         placeholder="Hours worked"
@@ -67,7 +68,8 @@ const handleSubmit = (e: React.FormEvent) => {
         min="0"
         step="0.01"
       />
-          <button
+
+      <button
         type="button"
         onClick={toggleTimer}
         className={isRunning ? "button-stop" : "button-start"}
@@ -78,7 +80,8 @@ const handleSubmit = (e: React.FormEvent) => {
      <button type="submit" className="button-submit">Add Entry</button>
 
       <p className="timer-display">Timer: {formatTime(seconds)}</p>
-       {error && <p className="error">{error}</p>}
+
+      {error && <p className="error">{error}</p>}
     </form>
   );
 }
