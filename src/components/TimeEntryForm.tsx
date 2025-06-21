@@ -12,7 +12,7 @@ function TimeEntryForm({ onAdd }: Props) {
   const [hours, setHours] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const { seconds, start, stop, getHours } = useTimer();
+  const { seconds, start, stop, getHours,reset } = useTimer();
 
   const formatTime = (s: number): string => {
     const hrs = Math.floor(s / 3600);
@@ -30,13 +30,14 @@ function TimeEntryForm({ onAdd }: Props) {
     }
     setIsRunning(!isRunning);
   };
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const manualHours = parseFloat(hours.trim());
     const timerHours = getHours();
-    const totalHours = !isNaN(manualHours) && manualHours > 0 ? manualHours : timerHours;
+    const totalHours =
+      !isNaN(manualHours) && manualHours > 0 ? manualHours : timerHours;
 
     if (!isValidTaskName(taskName)) {
       setError("Task name is required.");
@@ -49,6 +50,11 @@ function TimeEntryForm({ onAdd }: Props) {
     }
 
     onAdd({ taskName: taskName.trim(), hours: totalHours });
+    setTaskName("");
+    setHours("");
+    setError(null);
+    setIsRunning(false);
+    reset();
   };
 
   return (
@@ -77,7 +83,9 @@ function TimeEntryForm({ onAdd }: Props) {
         {isRunning ? "Stop Timer" : "Start Timer"}
       </button>
 
-     <button type="submit" className="button-submit">Add Entry</button>
+      <button type="submit" className="button-submit">
+        Add Entry
+      </button>
 
       <p className="timer-display">Timer: {formatTime(seconds)}</p>
 
