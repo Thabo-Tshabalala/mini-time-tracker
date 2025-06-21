@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isValidTaskName } from "../utils/validateTimeEntry";
 
 interface Props {
   onAdd: (entry: { taskName: string; hours: number }) => void;
@@ -7,11 +8,29 @@ interface Props {
 function TimeEntryForm({ onAdd }: Props) {
   const [taskName, setTaskName] = useState("");
   const [hours, setHours] = useState("");
+ const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onAdd({ taskName, hours: parseFloat(hours) });
-  };
+  
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const parsed = parseFloat(hours);
+
+  if (!isValidTaskName(taskName)) {
+    setError("Task name is required.");
+    return;
+  }
+
+  if (isNaN(parsed) || parsed <= 0) {
+    setError("Please enter valid hours.");
+    return;
+  }
+
+  onAdd({ taskName: taskName.trim(), hours: parsed });
+  setTaskName("");
+  setHours("");
+  setError(null);
+};
 
   return (
     <form onSubmit={handleSubmit}>
@@ -30,6 +49,7 @@ function TimeEntryForm({ onAdd }: Props) {
         step="0.01"
       />
       <button type="submit">Add Entry</button>
+       {error && <p className="error">{error}</p>}
     </form>
   );
 }
