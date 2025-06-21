@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { isValidTaskName } from "../utils/validateTimeEntry";
+import { useTimer } from "../hooks/useTimer";
 
 interface Props {
   onAdd: (entry: { taskName: string; hours: number }) => void;
@@ -9,6 +10,24 @@ function TimeEntryForm({ onAdd }: Props) {
   const [taskName, setTaskName] = useState("");
   const [hours, setHours] = useState("");
  const [error, setError] = useState<string | null>(null);
+ const [isRunning, setIsRunning] = useState(false);
+ const { seconds, start, stop } = useTimer();
+
+  const toggleTimer = () => {
+    if (isRunning) {
+      stop();
+    } else {
+      start();
+    }
+    setIsRunning(!isRunning);
+  };
+
+const formatTime = (s: number) => {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return `${h}h ${m}m ${sec}s`;
+};
 
   
 const handleSubmit = (e: React.FormEvent) => {
@@ -48,7 +67,17 @@ const handleSubmit = (e: React.FormEvent) => {
         min="0"
         step="0.01"
       />
-      <button type="submit">Add Entry</button>
+          <button
+        type="button"
+        onClick={toggleTimer}
+        className={isRunning ? "button-stop" : "button-start"}
+      >
+        {isRunning ? "Stop Timer" : "Start Timer"}
+      </button>
+
+     <button type="submit" className="button-submit">Add Entry</button>
+
+      <p className="timer-display">Timer: {formatTime(seconds)}</p>
        {error && <p className="error">{error}</p>}
     </form>
   );
