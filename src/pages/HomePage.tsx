@@ -1,7 +1,7 @@
-import TimeEntryForm from './TimeEntryForm.tsx';
-import TimeEntryList from './TimeEntryList';
-import { useTimeEntries } from '../hooks/useTimeEntries';
-import { getTotalHours } from '../utils/getTotalHours';
+import TimeEntryForm from '../components/TimeEntryForm.tsx';
+import TimeEntryList from '../components/TimeEntryList.tsx';
+import { useTimeEntries } from '../hooks/useTimeEntries.ts';
+import { getTotalHours } from '../utils/getTotalHours.ts';
 
 function HomePage() {
   const { entries, addEntry, deleteEntry, editEntry } = useTimeEntries();
